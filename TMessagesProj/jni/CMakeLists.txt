@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
+# LITEGRAM: ccache acelera rebuilds (GitHub Actions guarda o cache).
+# So ativa se o ccache existir no sistema; local sem ccache nao muda nada.
+find_program(LITEGRAM_CCACHE ccache)
+if(LITEGRAM_CCACHE)
+  set(CMAKE_C_COMPILER_LAUNCHER "${LITEGRAM_CCACHE}")
+  set(CMAKE_CXX_COMPILER_LAUNCHER "${LITEGRAM_CCACHE}")
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)

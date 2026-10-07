@@ -22,10 +22,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-litegram-${{ runner.os }}-${{ hashFiles('TMessagesProj/jni/CMakeLists.txt') }}
+          restore-keys: ccache-litegram-${{ runner.os }}-
+
       - name: Install Android packages
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
           export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+          sudo apt-get install -y ccache
+          ccache --max-size=2G --set-config=sloppiness=pch_defines,time_macros || true
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;27.2.12479018" "cmake;3.22.1"
 
@@ -33,7 +45,10 @@ jobs:
         run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Build Litegram (arm64 debug)
-        run: ./gradlew :TMessagesProj_App:assembleAfatDebug --max-workers=4 --console=plain
+        run: |
+          export CCACHE_DIR=~/.ccache
+          ./gradlew :TMessagesProj_App:assembleAfatDebug --max-workers=4 --build-cache --console=plain
+          ccache -s || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
