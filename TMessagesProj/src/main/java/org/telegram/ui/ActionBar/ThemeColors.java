@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 public class ThemeColors {
 
-    public static final int TELEGRAM_COLOR = 0xFF229AF0;        // -14509328
-    public static final int TELEGRAM_COLOR_TEXT = 0xFF298ACF;   // -14054705
+    public static final int TELEGRAM_COLOR = 0xFF8E3FD1;        // Litegram violeta
+    public static final int TELEGRAM_COLOR_TEXT = 0xFF7A2FC0;   // Litegram violeta texto
     public static final int DEFAULT_BLACK_TEXT = 0xFF1A1D21;   // -15065823
 
     private static SparseArray<String> colorKeysMap;
@@ -80,7 +80,7 @@ public class ThemeColors {
         defaultColors[key_windowBackgroundUnchecked] = 0xff96A2AD;
         defaultColors[key_windowBackgroundChecked] = 0xff229AF0;
         defaultColors[key_windowBackgroundCheckText] = 0xffffffff;
-        defaultColors[key_progressCircle] = 0xff1c93e3;
+        defaultColors[key_progressCircle] = 0xff8e3fd1;
         defaultColors[key_windowBackgroundWhiteGrayIcon] = 0xff1a1d21;
         defaultColors[key_windowBackgroundWhiteBlueText] = 0xff4092cd;
         defaultColors[key_windowBackgroundWhiteBlueText2] = 0xff3a95d5;
@@ -267,7 +267,7 @@ public class ThemeColors {
         defaultColors[key_chats_menuPhone] = 0xffffffff;
         defaultColors[key_chats_menuPhoneCats] = 0xffc2e5ff;
         defaultColors[key_chats_actionIcon] = 0xffffffff;
-        defaultColors[key_chats_actionBackground] = 0xff65a9e0;
+        defaultColors[key_chats_actionBackground] = 0xff9d5fe8;
         defaultColors[key_chats_actionPressedBackground] = 0xff569dd6;
         defaultColors[key_chats_menuTopBackgroundCats] = 0xff598fba;
         defaultColors[key_chats_archivePullDownBackground] = 0xffc6c9cc;
@@ -304,9 +304,9 @@ public class ThemeColors {
         defaultColors[key_chat_inBubble] = 0xffffffff;
         defaultColors[key_chat_inBubbleSelected] = 0xffecf7fd;
         defaultColors[key_chat_inBubbleShadow] = 0xff1d3753;
-        defaultColors[key_chat_outBubble] = 0xffefffde;
+        defaultColors[key_chat_outBubble] = 0xfff3e8ff;
         defaultColors[key_chat_outBubbleGradientSelectedOverlay] = 0x14000000;
-        defaultColors[key_chat_outBubbleSelected] = 0xffd9f7c5;
+        defaultColors[key_chat_outBubbleSelected] = 0xffe3ccff;
         defaultColors[key_chat_outBubbleShadow] = 0xff1e750c;
         defaultColors[key_chat_inMediaIcon] = 0xffffffff;
         defaultColors[key_chat_inMediaIconSelected] = 0xffeff8fe;
