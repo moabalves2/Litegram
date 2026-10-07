@@ -186,12 +186,12 @@ target_include_directories(breakpad PUBLIC
         third_party/breakpad/src)
 
 
-option(LITEGRAM_LITE "Litegram ultra-lite: sem VoIP/tgcalls" OFF)
+option(LITEGRAM_LITE "Litegram ultra-lite: sem VoIP/tgcalls" ON)
 if(LITEGRAM_LITE)
   set(LITEGRAM_VOIP_LIBS "")
   add_compile_definitions(LITEGRAM_LITE=1)
 else()
-  set(LITEGRAM_VOIP_LIBS "-Wl,--whole-archive rnnoise openh264 voipandroid -Wl,--no-whole-archive")
+  set(LITEGRAM_VOIP_LIBS "-Wl,--whole-archive" rnnoise openh264 voipandroid "-Wl,--no-whole-archive")
 endif()
 
 #voip
