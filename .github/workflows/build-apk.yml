@@ -5,6 +5,9 @@ on:
   push:
     branches: [ litegram ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,3 +40,14 @@ jobs:
         with:
           name: litegram-apk
           path: TMessagesProj_App/build/outputs/apk/afat/debug/*.apk
+
+      - name: Release v0.0.1
+        uses: ncipollo/release-action@v1
+        with:
+          tag: v0.0.1
+          name: Litegram v0.0.1
+          body: |
+            Litegram ultra-lite — só o essencial + botão ♪ Baixar Música (YouTube).
+            APK debug arm64 (instale e teste; antes de distribuir, gere com suas chaves).
+          allowUpdates: true
+          artifacts: TMessagesProj_App/build/outputs/apk/afat/debug/*.apk
