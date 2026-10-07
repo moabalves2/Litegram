@@ -201,7 +201,6 @@ if(LITEGRAM_LITE)
 else()
   set(LITEGRAM_VOIP_LIBS "-Wl,--whole-archive" rnnoise openh264 voipandroid "-Wl,--no-whole-archive")
 endif()
-
 #voip
 if(NOT LITEGRAM_LITE)
 include(${CMAKE_HOME_DIRECTORY}/voip/CMakeLists.txt)
@@ -228,6 +227,19 @@ add_library(${NATIVE_LIB} SHARED
         tde2e/bridge.cpp
         tests.cpp
 )
+
+# LITEGRAM_LITE: sem os alvos voip, a lib principal perde os includes que
+# eles exportavam. Repoe o necessario p/ headers restantes:
+#  "breakpad/src/..."  <- jni/third_party
+#  <tgnet/...>         <- jni/
+#  "rtc_base/..."      <- jni/voip/webrtc (webrtc esta em voip/, nao no topo)
+if(LITEGRAM_LITE)
+  target_include_directories(${NATIVE_LIB} PUBLIC
+          ${CMAKE_HOME_DIRECTORY}
+          ${CMAKE_HOME_DIRECTORY}/third_party
+          ${CMAKE_HOME_DIRECTORY}/voip
+          ${CMAKE_HOME_DIRECTORY}/voip/webrtc)
+endif()
 
 target_compile_options(${NATIVE_LIB} PUBLIC
         -ffast-math -Oz -funroll-loops -ffast-math -fno-strict-aliasing -fno-math-errno)
