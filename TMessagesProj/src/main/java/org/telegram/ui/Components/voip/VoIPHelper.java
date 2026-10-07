@@ -74,6 +74,9 @@ public class VoIPHelper {
 	private static final int VOIP_SUPPORT_ID = 4244000;
 
 	public static void startCall(TLRPC.User user, boolean videoCall, boolean canVideoCall, final Activity activity, TLRPC.UserFull userFull, AccountInstance accountInstance) {
+		if (!org.telegram.messenger.Litegram.ENABLE_CALLS) {
+			return; // Litegram ultra-lite: chamadas removidas
+		}
 		if (accountInstance == null ? MessagesController.getInstance(UserConfig.selectedAccount).isFrozen() : accountInstance.getMessagesController().isFrozen()) {
 			AccountFrozenAlert.show(accountInstance == null ? UserConfig.selectedAccount : accountInstance.getCurrentAccount());
 			return;
@@ -126,6 +129,9 @@ public class VoIPHelper {
 	}
 
 	public static void startCall(TLRPC.Chat chat, TLRPC.InputPeer peer, String hash, boolean createCall, Boolean checkJoiner, Activity activity, BaseFragment fragment, AccountInstance accountInstance) {
+		if (!org.telegram.messenger.Litegram.ENABLE_CALLS) {
+			return; // Litegram ultra-lite: chamadas removidas
+		}
 		if (activity == null) {
 			return;
 		}

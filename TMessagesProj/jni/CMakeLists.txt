@@ -149,6 +149,11 @@ target_compile_definitions(sqlite PUBLIC
         NULL=0 SOCKLEN_T=socklen_t LOCALE_NOT_USED ANDROID_NDK DISABLE_IMPORTGL AVOID_TABLES ANDROID_TILE_BASED_DECODE HAVE_STRCHRNUL=0 ANDROID_ARMV6_IDCT)
 
 #breakpad
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/breakpad_getcontext_arm64.o")
+  set(LITEGRAM_BREAKPAD_SRC breakpad_getcontext_arm64.o)
+else()
+  set(LITEGRAM_BREAKPAD_SRC third_party/breakpad/src/common/android/breakpad_getcontext.S)
+endif()
 add_library(breakpad STATIC
         third_party/breakpad/src/client/linux/crash_generation/crash_generation_client.cc
         third_party/breakpad/src/client/linux/handler/exception_handler.cc
@@ -162,7 +167,10 @@ add_library(breakpad STATIC
         third_party/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
         third_party/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
         third_party/breakpad/src/client/minidump_file_writer.cc
-        third_party/breakpad/src/common/android/breakpad_getcontext.S
+        # LITEGRAM (Termux): breakpad_getcontext.S nao compila no clang sob
+        # qemu; se existir o .o pre-compilado ao lado, usa ele, senao usa o .S
+        # (ex.: GitHub Actions compila o .S normalmente).
+        ${LITEGRAM_BREAKPAD_SRC}
         third_party/breakpad/src/common/convert_UTF.c
         third_party/breakpad/src/common/md5.cc
         third_party/breakpad/src/common/string_conversion.cc
@@ -173,14 +181,23 @@ add_library(breakpad STATIC
         third_party/breakpad/src/common/linux/memory_mapped_file.cc
         third_party/breakpad/src/common/linux/safe_readlink.cc)
 set_target_properties(breakpad PROPERTIES ANDROID_ARM_MODE arm)
-set_property(SOURCE third_party/breakpad/src/common/android/breakpad_getcontext.S PROPERTY LANGUAGE C)
 target_include_directories(breakpad PUBLIC
         third_party/breakpad/src/common/android/include
         third_party/breakpad/src)
 
 
+option(LITEGRAM_LITE "Litegram ultra-lite: sem VoIP/tgcalls" OFF)
+if(LITEGRAM_LITE)
+  set(LITEGRAM_VOIP_LIBS "")
+  add_compile_definitions(LITEGRAM_LITE=1)
+else()
+  set(LITEGRAM_VOIP_LIBS "-Wl,--whole-archive rnnoise openh264 voipandroid -Wl,--no-whole-archive")
+endif()
+
 #voip
+if(NOT LITEGRAM_LITE)
 include(${CMAKE_HOME_DIRECTORY}/voip/CMakeLists.txt)
+endif()
 
 set(NATIVE_LIB "tmessages.49")
 
@@ -249,11 +266,11 @@ target_link_options(${NATIVE_LIB} PRIVATE "-Wl,-z,max-page-size=16384")
 target_link_options(${NATIVE_LIB} PRIVATE "-Wl,-z,common-page-size=16384")
 target_link_options(${NATIVE_LIB} PRIVATE "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/exports.map")
 target_link_libraries(${NATIVE_LIB}
-        -Wl,--whole-archive rnnoise openh264 voipandroid -Wl,--no-whole-archive
+        ${LITEGRAM_VOIP_LIBS}
         webrtc_absl
-        tgcalls
-        wasm
-        tgcalls_tp
+        $<$<NOT:$<BOOL:${LITEGRAM_LITE}>>:tgcalls>
+        $<$<NOT:$<BOOL:${LITEGRAM_LITE}>>:wasm>
+        $<$<NOT:$<BOOL:${LITEGRAM_LITE}>>:tgcalls_tp>
         tgnet
         tlottie
         sqlite

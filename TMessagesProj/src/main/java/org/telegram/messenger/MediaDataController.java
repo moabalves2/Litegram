@@ -8442,6 +8442,9 @@ public class MediaDataController extends BaseController {
     }
 
     public void loadBotKeyboard(MessagesStorage.TopicKey topicKey, boolean postNotificationIfNotFound) {
+        if (!Litegram.ENABLE_BOT_KEYBOARD) {
+            return; // Litegram ultra-lite: sem teclado de bots
+        }
         TLRPC.Message keyboard = botKeyboards.get(topicKey);
         if (keyboard != null) {
             getNotificationCenter().postNotificationName(NotificationCenter.botKeyboardDidLoad, keyboard, topicKey);

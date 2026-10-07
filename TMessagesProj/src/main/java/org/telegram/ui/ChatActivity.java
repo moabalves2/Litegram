@@ -14412,6 +14412,9 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private void checkBotKeyboard() {
+        if (!org.telegram.messenger.Litegram.ENABLE_BOT_KEYBOARD) {
+            return;
+        }
         if (chatActivityEnterView == null || botButtons == null || userBlocked) {
             return;
         }

@@ -2797,6 +2797,12 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                         return;
                     }
                     openDocumentsLayout(true);
+                } else if (num == 30) {
+                    // Litegram: Baixar Música (YouTube / YT Music -> áudio m4a 128k, sem capa, sem bot)
+                    BulletinFactory.of(ChatAttachAlert.this).createSimpleBulletin(R.raw.voip_invite, "Baixar Música").show();
+                    long did = getDialogId();
+                    org.telegram.messenger.YtMusicDownloader.showPicker(getContext(), currentAccount, did,
+                            () -> dismiss(true));
                 } else if (num == 5) {
                     if (!plainTextEnabled && checkCanRemoveRestrictionsByBoosts()) {
                         return;
@@ -6525,6 +6531,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
         private List<TLRPC.TL_attachMenuBot> attachMenuBots = new ArrayList<>();
 
         private int documentButton;
+        private int ytMusicButton;
         private int musicButton;
         private int pollButton;
         private int todoButton;
@@ -6576,6 +6583,9 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                         attachButton.setTextAndIcon(4, getString(R.string.ChatDocument), GlassTabView.TabAnimation.FILES);
                         attachButton.setTag(4);
                         err = !checkPhotoAndDocumentsPermission(mContext);
+                    } else if (position == ytMusicButton) {
+                        attachButton.setTextAndIcon(30, "Baixar Música", GlassTabView.TabAnimation.MUSIC);
+                        attachButton.setTag(30);
                     } else if (position == locationButton) {
                         attachButton.setTextAndIcon(6, getString(R.string.ChatLocation), GlassTabView.TabAnimation.LOCATION);
                         attachButton.setTag(6);
@@ -6657,6 +6667,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
             buttonsCount = 0;
             galleryButton = -1;
             documentButton = -1;
+            ytMusicButton = -1;
             musicButton = -1;
             pollButton = -1;
             todoButton = -1;
@@ -6734,6 +6745,7 @@ public class ChatAttachAlert extends BottomSheet implements NotificationCenter.N
                     }
                 }
                 documentButton = buttonsCount++;
+                ytMusicButton = buttonsCount++;
 
                 if (plainTextEnabled) {
                     locationButton = buttonsCount++;

@@ -283,6 +283,10 @@ public class DialogsSearchAdapter extends RecyclerListView.SelectionAdapter {
     }
 
     private boolean filter(Object obj) {
+        // Litegram ultra-lite: esconde bots, mostra só gente de verdade
+        if (!org.telegram.messenger.Litegram.ENABLE_BOTS && obj instanceof TLRPC.User && ((TLRPC.User) obj).bot) {
+            return false;
+        }
         if (dialogsType != DialogsActivity.DIALOGS_TYPE_START_ATTACH_BOT) {
             return true;
         }

@@ -44,7 +44,7 @@ android {
 
     androidResources {
         noCompress += "pack"
-        localeFilters += ["zz"]
+        localeFilters += ["en", "pt-rBR"]
     }
 
     signingConfigs {
@@ -95,8 +95,8 @@ android {
             minifyEnabled true
             shrinkResources true
             multiDexEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../TMessagesProj/proguard-rules.pro'
-            ndk.debugSymbolLevel = 'FULL'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), '../TMessagesProj/proguard-rules.pro', '../proguard-aggressive.pro'
+            ndk.debugSymbolLevel = 'SYMBOL_TABLE'
         }
     }
 
@@ -117,7 +117,7 @@ android {
     productFlavors {
         bundleAfat {
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                abiFilters "arm64-v8a"
             }
             ext {
                 abiVersionCode = 1
@@ -126,7 +126,7 @@ android {
         }
         bundleAfat_SDK23 {
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                abiFilters "arm64-v8a"
             }
             sourceSets.debug {
                 manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
@@ -142,7 +142,8 @@ android {
         }
         afat {
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+                // LITE: só arm64-v8a (troque p/ armeabi-v7a em devices 32-bit)
+                abiFilters "arm64-v8a"
             }
             sourceSets.debug {
                 manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
@@ -184,12 +185,14 @@ android {
 
         multiDexEnabled true
 
-        vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
+        // LITE: só EN + PT-BR, reduz densidade e gera split por ABI
+        resConfigs "en", "pt-rBR"
+        vectorDrawables.generatedDensities = ['xhdpi', 'xxhdpi']
 
         externalNativeBuild {
             cmake {
                 version '3.22.1'
-                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-21' // , '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
+                arguments '-DANDROID_STL=c++_static', '-DANDROID_PLATFORM=android-21', '-DLITEGRAM_LITE=ON' // , '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON'
                 targets 'tmessages.49'
             }
         }

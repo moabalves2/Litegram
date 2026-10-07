@@ -247,6 +247,9 @@ public class StoriesController {
     }
 
     public boolean hasStories(long dialogId) {
+        if (!org.telegram.messenger.Litegram.ENABLE_STORIES) {
+            return false; // Litegram: sem stories
+        }
         if (dialogId == 0) {
             return false;
         }
@@ -280,6 +283,9 @@ public class StoriesController {
     }
 
     public boolean hasStories() {
+        if (!org.telegram.messenger.Litegram.ENABLE_STORIES) {
+            return false; // Litegram: sem stories
+        }
         return (dialogListStories != null && dialogListStories.size() > 0) || hasSelfStories();
     }
 
